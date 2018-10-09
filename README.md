@@ -13,6 +13,24 @@
 - профилировать и семплировать java app для выявления узких мест
 
 
+## Java App Dev
+- git
+- maven
+- java syntax 
+- OOAD
+
+## IO
+- File IO
+- Networking
+- Intro NIO2
+- CAP
+
+## Threads: parallelism
+- Thread API
+
+## Data Race
+- JMM
+
 ## JVM Architecture (3)
 - Threads
 - Stack
@@ -58,7 +76,7 @@
 - AppServer architecture
 - ThreadPools
 - ConnectionPools
-- PerparedStatement Caches
+- PreparedStatement Caches
 - Типовые граничные условия enterprise java app для тестов
 
 ## Buffer (3)
