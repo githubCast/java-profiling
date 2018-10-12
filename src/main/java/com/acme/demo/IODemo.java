@@ -21,7 +21,6 @@ public class IODemo {
                 System.out.println(">>> " + readLine);
             }
 
-
         } catch (IOException e) {
             e.printStackTrace();
         }

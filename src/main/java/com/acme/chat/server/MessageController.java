@@ -21,8 +21,8 @@ public class MessageController {
      *   XA resource + JTA(JavaEE) -> Saga
      */
     public void send(String message) {
-        notifyClients(message);
         historyController.update(message);
+        notifyClients(message);
     }
 
     public List<String> getHistory() {
