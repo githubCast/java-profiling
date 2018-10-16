@@ -13,8 +13,9 @@ public class IODemo {
                             new BufferedInputStream(
                                 new FileInputStream(
                                     new File("test.txt"))),
-                        "cp866"))
+                        "cp866"), 8192)
         ) {
+
 
             String readLine = null;
             while ((readLine = reader.readLine()) != null) {
