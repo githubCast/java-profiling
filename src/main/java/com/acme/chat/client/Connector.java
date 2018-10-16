@@ -2,39 +2,71 @@ package com.acme.chat.client;
 
 import java.io.*;
 import java.net.Socket;
-import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-public class Connector {
-    public static void main(String[] args) {
-        Scanner console = new Scanner(System.in);
+public class Connector implements Closeable {
+    private static Logger logger = Logger.getLogger("client.Connector");
+    private Socket serverConnection;
+    private BufferedReader serverReader;
+    private PrintWriter serverWriter;
 
-        try (
-                Socket serverConnection = new Socket("localhost", 6666);
-                BufferedReader serverReader = new BufferedReader(
-                        new InputStreamReader(
-                                new BufferedInputStream(
-                                        serverConnection.getInputStream())));
+    public Connector(String host, int port) throws IOException {
+        serverConnection = new Socket(host, port);
 
-                PrintWriter serverWriter = new PrintWriter(
-                        new OutputStreamWriter(
-                                new BufferedOutputStream(
-                                        serverConnection.getOutputStream())));
-        ) {
+        serverReader = new BufferedReader(
+                new InputStreamReader(
+                        new BufferedInputStream(
+                                serverConnection.getInputStream())));
 
-            while (true) {
-                String consoleReadLine = console.nextLine();
-                System.out.println("DEBUG: " + consoleReadLine);
+        serverWriter = new PrintWriter(
+                new OutputStreamWriter(
+                        new BufferedOutputStream(
+                                serverConnection.getOutputStream())));
 
-                serverWriter.println(consoleReadLine);
-                serverWriter.flush();
+        logger.log(Level.INFO, "Connector created");
 
-                System.out.println("DEBUG: " + "string sent");
-                System.out.println(serverReader.readLine());
+    }
 
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
+    @Override
+    public void close() throws IOException {
+        if (serverWriter != null) {
+            serverWriter.close();
         }
+
+        IOException readerCloseException = null;
+        if (serverReader != null) {
+            try {
+                serverReader.close();
+            } catch (IOException e) {
+                readerCloseException = e;
+            }
+        }
+
+        IOException connectionCloseException = null;
+        if (serverConnection != null) {
+            try {
+                serverConnection.close();
+            } catch (IOException e) {
+                connectionCloseException = e;
+            }
+        }
+
+        if (connectionCloseException != null) {
+            if (readerCloseException != null) connectionCloseException.addSuppressed(readerCloseException);
+            throw connectionCloseException;
+        } else {
+            if (readerCloseException != null) throw connectionCloseException;
+        }
+
+        logger.log(Level.INFO, "Connector closed");
+    }
+
+    public BufferedReader getServerReader() {
+        return serverReader;
+    }
+
+    public PrintWriter getServerWriter() {
+        return serverWriter;
     }
 }

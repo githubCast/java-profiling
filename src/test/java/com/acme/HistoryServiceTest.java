@@ -2,7 +2,7 @@ package com.acme;
 
 import org.junit.Test;
 
-public class HistoryControllerTest {
+public class HistoryServiceTest {
     @Test
     public void shouldSaveMessageToHistoryWhenUpdateHistory() {
 
